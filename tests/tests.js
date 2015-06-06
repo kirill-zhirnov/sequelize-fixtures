@@ -89,6 +89,25 @@ describe('fixture (with promises)', function() {
         });
     });
 
+    it('should accept saveOptions in global options', function() {
+        return sf.loadFixture({
+            model: 'Article',
+            data: {
+                title: 'Any title 2',
+                slug: 'my-slug',
+                body: 'My nice article'
+            }
+        }, models, {saveOptions: { fields: ['title', 'body'] }}).then(function() {
+            return models.Article.find({
+                where: {
+                    title: 'Any title 2'
+                }
+            });
+        }).then(function(data) {
+            (data.slug === null).should.equal(true);
+        });
+    });
+
     it('should not duplicate fixtures', function () {
         return sf.loadFixture(FOO_FIXTURE, models)
             .then(function() {
